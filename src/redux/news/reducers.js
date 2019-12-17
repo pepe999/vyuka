@@ -1,4 +1,4 @@
-import { readNews, createNews } from "./actions";
+import { readNews, createNews, secondNews } from "./actions";
 import { handleActions } from "redux-actions";
 
 export const newsReducer = handleActions(
@@ -7,8 +7,11 @@ export const newsReducer = handleActions(
       news: { title: "pokus", subtitle: "aaaa", detail: "bbbbbbbbb" }
     }),
     [createNews]: () => ({
-      news: { title: "pokus", subtitle: "aaaa", detail: "bbbbbbbbb" }
+      news: { title: "create", subtitle: "bbbbb", detail: "zzzzzzz" }
+    }),
+    [secondNews]: () => ({
+      news: { title: "druhá", subtitle: "XXXX", detail: "yyyyyyyyy" }
     })
   },
-  { news: { title: "pokus", subtitle: "aaaa", detail: "bbbbbbbbb" } }
+  { news: { title: "default", subtitle: "default", detail: "default" } }
 );

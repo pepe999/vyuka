@@ -2,6 +2,8 @@ import React from "react";
 
 import { connect } from "react-redux";
 
+import { secondNews } from "../../redux/news/index";
+
 const mapStateToProps = state => {
   return { news: state.news.news };
 };
@@ -11,6 +13,7 @@ function mapDispatchToProps(dispatch) {
     // nactiHlasky: hlasky => dispatch(nactiHlasky(hlasky)),
     // nactiHlaskySaga: hlasky => dispatch(nactiHlaskySaga(hlasky)),
     // dalsiHlaska: hlasky => dispatch(dalsiHlaska(hlasky))
+    addSecondNews: () => dispatch(secondNews())
   };
 }
 
@@ -42,12 +45,17 @@ class connectedNews extends React.Component {
   //     }
   //   }
 
-  //   handleAnswer(e) {
-  //     this.setState({answer: !this.state.answer});
-  //   }
+  handleButton(e) {
+    this.props.addSecondNews();
+  }
 
   render() {
-    return <div>{this.props.news.title}</div>;
+    return (
+      <div>
+        {this.props.news.title}
+        <button onClick={e => this.handleButton(e)}> akce</button>{" "}
+      </div>
+    );
   }
 }
 const News = connect(mapStateToProps, mapDispatchToProps)(connectedNews);
