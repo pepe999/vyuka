@@ -1,12 +1,36 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./containers/App";
+// import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import { Provider } from "react-redux";
+// import store from './redux/store'
+import { configureStore } from "./redux";
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+import createSagaManager from "./sagas";
+
+import history from "./history";
+import { Router } from "react-router-dom";
+
+////////////////////////////////
+
+const [store] = configureStore();
+
+// Start all sagas with the API configured according to the environment
+createSagaManager(store).start();
+
+export const render = (Component: ComponentType<any>) => {
+  ReactDOM.render(
+    <React.Fragment>
+      <Provider store={store}>
+        <Router history={history}>
+          <Component />
+        </Router>
+      </Provider>
+    </React.Fragment>,
+    document.getElementById("root")
+  );
+};
+
+render(App);
