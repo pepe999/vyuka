@@ -6,8 +6,14 @@ import { secondNews, fetchNews } from "../../redux/news/index";
 
 import { NewsItem } from "../../components/NewsItem";
 
+import { getNewsList, getActiveNewsList } from "../../redux/news/selectors";
+
 const mapStateToProps = state => {
-  return { news: state.news.news };
+  // return { news: state.news.news };
+  return {
+    news: getNewsList(state),
+    activeNews: getActiveNewsList(state)
+  };
 };
 
 // istanbul ignore next
@@ -38,7 +44,7 @@ class connectedNews extends React.Component {
         {this.props.news[0].title}
         <button onClick={e => this.handleButton(e)}> načíst</button>
         <hr />
-        {this.props.news.map(news => (
+        {this.props.activeNews.map(news => (
           <NewsItem title={news.title} />
         ))}
       </div>
