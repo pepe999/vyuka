@@ -1,0 +1,10 @@
+{
+  "apiUrl": "http://localhost",
+  "environment": "development",
+  "timeout": 120000,
+  "tokenExpirationTolerance": 60000,
+  "automaticLogoutTimeout": 300,
+  "logoutModalConfirmationTimeout": 600,
+  "applicationListResetInterval": 30,
+  "allowSigningInPostCheckingPhase": true
+}

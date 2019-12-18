@@ -11,65 +11,41 @@ import {
   // select,
 } from "redux-saga/effects";
 
-// import { nactiHlasky } from "../redux/actions/index";
+import { Api } from "./rest/index";
+import { downloadConfig } from "./rest/localApi";
 
-import { loadGames } from "./hlasky";
+import { newsActionTypes } from "../redux/news/actions";
+import { fetchNewsSaga } from "./news/sagas";
 
 // action type which cancels a running rootSaga in cancellableSaga
 const CANCEL_ROOT_SAGA = "CANCEL_ROOT_SAGA";
 
 // business logic saga entry point
 export function* rootSaga(): Generator<Object, void, Object> {
-  yield call(initializeApplication);
-
-  // start saga for listening to application notifications
-  // yield fork(listenForNotifications)
-
   // try to fetch `config.json` from server
-  // const localConfig: ?JsonConfig = yield call(downloadConfigSaga)
+  const localConfig: ?JsonConfig = yield call(downloadConfigSaga);
 
-  // if config exists -> initialize main application
-  // if (localConfig) {
-  //   yield call(initializeApplication, localConfig)
-  // } else {
-  //   // config not found -> show error notification and exit
-  //   yield put(
-  //     notification({
-  //       type: 'error',
-  //       message:
-  //         'Critical error: cannot find config.json, ' +
-  //         'application could not be initialized. ' +
-  //         'Please, contact admin of the server.',
-  //     })
-  //   )
-  // }
+  yield call(initializeApplication, localConfig);
 }
 
-function* initializeApplication(): Generator<Object, void, Object> {
-  yield all([yield takeLatest("NACTI_HLASKY_SAGA", loadGames)]);
+function* initializeApplication(
+  config: JsonConfig
+): Generator<Object, void, Object> {
+  yield all([takeLatest(newsActionTypes.FETCH_NEWS, fetchNewsSaga)]);
+
+  yield call(Api.createApi, config);
 }
 
-// function* loadGames() {
-
-//   try {
-//     // data is obtained after axios call is resolved
-//     let { data } = yield call(fetchApi, null);
-//     // dispatch action to change redux state
-//     // yield put(updateProfile(data.profile));
-//      console.log("data")
-//     console.log(data)
-//     yield put(nactiHlasky(data.records));
-//     // console.log(data)
-
-//   } catch (e) {
-//     // catch error on a bad axios call
-//     // alert using an alert library
-//   }
-// }
-
-// function* actionWatcher() {
-//      yield takeLatest('NACTI_HLASKY_SAGA', loadGames)
-// }
+function* downloadConfigSaga(): Generator<Object, ?JsonConfig, Object> {
+  let result = null;
+  try {
+    const response = yield call(downloadConfig);
+    result = response.data ? response.data : null;
+  } catch (err) {
+    // ...
+  }
+  return result;
+}
 
 // this saga is to be run by sagaMiddleware in order for HMR to work
 // note that when saga HMR is enabled, changes in src/redux will also trigger the cancellation
