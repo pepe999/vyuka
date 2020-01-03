@@ -2,9 +2,18 @@ import { applyMiddleware, compose, combineReducers, createStore } from "redux";
 // import { reducer as reduxFormReducer } from "redux-form";
 import createSagaMiddleware from "redux-saga";
 
+import { persistReducer, persistStore } from "redux-persist";
+import storageSession from "redux-persist/lib/storage/session";
+
 // import { rootSaga } from '../sagas'
 
 import { newsReducer } from "./news";
+
+const persistConfig = {
+  key: "root",
+  storage: storageSession
+  // whitelist: [authorizationStoreKey]
+};
 
 const appReducers = combineReducers({
   // form: reduxFormReducer,
@@ -25,7 +34,7 @@ export const configureStore = () => {
   const middleware = [sagaMiddleware];
 
   const store: Object = createStore(
-    combinedReducers,
+    persistReducer(persistConfig, combinedReducers),
     (composeEnhancers(applyMiddleware(...middleware)): StoreEnhancer<*, *, *>)
   );
 
@@ -34,5 +43,7 @@ export const configureStore = () => {
   // sagaMiddleware is exposed because of our saga HMR
   store.sagaMiddleware = sagaMiddleware;
 
-  return [store];
+  const persistor = persistStore(store);
+
+  return [store, persistor];
 };
