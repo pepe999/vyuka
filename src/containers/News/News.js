@@ -28,14 +28,13 @@ class connectedNews extends React.Component {
   //   };
 
   componentDidMount() {
-    //   bez timeoutu se zavolala akce drive nez se inisializovala aplikace - neprobehlo volání sagy
-    setTimeout(() => {
-      this.props.fetchNews();
-    });
+    console.log("mount");
+
+    this.props.fetchNews();
   }
 
   handleButton(e) {
-    this.props.secondNews();
+    this.props.fetchNews();
   }
 
   render() {

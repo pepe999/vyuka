@@ -23,24 +23,30 @@ const CANCEL_ROOT_SAGA = "CANCEL_ROOT_SAGA";
 // business logic saga entry point
 export function* rootSaga(): Generator<Object, void, Object> {
   // try to fetch `config.json` from server
+  console.log("1 root");
   const localConfig: ?JsonConfig = yield call(downloadConfigSaga);
-
+  console.log("2 root");
   yield call(initializeApplication, localConfig);
+  console.log("3 root");
 }
 
 function* initializeApplication(
   config: JsonConfig
 ): Generator<Object, void, Object> {
+  console.log("1 init");
   yield all([takeLatest(newsActionTypes.FETCH_NEWS, fetchNewsSaga)]);
-
+  console.log("2 init");
   yield call(Api.createApi, config);
+  console.log("3 init");
 }
 
 function* downloadConfigSaga(): Generator<Object, ?JsonConfig, Object> {
+  console.log("1 config");
   let result = null;
   try {
     const response = yield call(downloadConfig);
     result = response.data ? response.data : null;
+    console.log("2 config");
   } catch (err) {
     // ...
   }
@@ -50,6 +56,8 @@ function* downloadConfigSaga(): Generator<Object, ?JsonConfig, Object> {
 // this saga is to be run by sagaMiddleware in order for HMR to work
 // note that when saga HMR is enabled, changes in src/redux will also trigger the cancellation
 export function* cancellableSaga(): Generator<Object, void, Object> {
+  console.log("1 cancel");
+
   // start the root saga
   const task = yield fork(rootSaga);
 

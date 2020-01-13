@@ -1,3 +1,4 @@
+// @flow
 import { applyMiddleware, compose, combineReducers, createStore } from "redux";
 // import { reducer as reduxFormReducer } from "redux-form";
 import createSagaMiddleware from "redux-saga";

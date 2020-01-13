@@ -20,7 +20,10 @@ export function* fetchNewsSaga(action: Action): GeneratorState {
     //   yield call(getUserGeolocationSaga);
     // }
     // console.log("err");
+    console.log("1 news");
+
     const response = yield call(getSaga, Endpoints.news());
+    console.log("2 news");
 
     // yield put(fetchNewsSuccess, response.data);
     yield put(fetchNewsSuccess(response.data));
